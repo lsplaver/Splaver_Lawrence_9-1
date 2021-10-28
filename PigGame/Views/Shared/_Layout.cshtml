@@ -1,19 +1,33 @@
-﻿<!DOCTYPE html>
+﻿@{ 
+    string message = "Player 2 Wins!";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - PigGame</title>
+    <title>@ViewBag.Title</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <header>
-    </header>
+    <div class="container">
+        <header class="jumbotron text-center">
+            <h1>Let's Play PIG!</h1>
+        </header>
+    </div>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+    </div>
+    <div class="container">
+        <footer class="bg-dark text-white font-weight-bold text-center">
+            @if (!string.IsNullOrEmpty(message))
+            {
+                <h1>@message</h1>
+            }
+        </footer>
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
