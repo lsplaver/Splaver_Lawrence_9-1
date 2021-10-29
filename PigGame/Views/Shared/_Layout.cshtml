@@ -1,5 +1,9 @@
 ﻿@{ 
-    string message = "Player 2 Wins!";
+    string message = "";
+    if (TempData.Peek("message") != null)
+    {
+        message = TempData["message"].ToString(); // "Player 2 Wins!";
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
