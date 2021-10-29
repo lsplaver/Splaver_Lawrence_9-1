@@ -8,7 +8,7 @@ namespace PigGame.Models
 {
     public class PigSession
     {
-        private const string CurrentPlayerKey = "currplayer", CurrentRollKey = "currroll", CurrentTurnScoreKey = "currscore", PlayerOneScoreKey = "playerone", PlayerTwoScoreKey = "playertwo";
+        private const string CurrentPlayerKey = "currplayer", CurrentRollKey = "currroll", CurrentTurnScoreKey = "currscore", PlayerOneScoreKey = "playerone", PlayerTwoScoreKey = "playertwo", NewGameKey = "newgame";
 
         private ISession session { get; set; }
 
@@ -36,6 +36,10 @@ namespace PigGame.Models
         public void SetPlayerTwoScore(int playerTwoScore) => session.SetInt32(PlayerTwoScoreKey, playerTwoScore);
 
         public int? GetPlayerTwoScore() => session.GetInt32(PlayerTwoScoreKey);
+
+        public void SetNewGame(string newGame) => session.SetString(NewGameKey, newGame);
+
+        public string GetNewGame() => session.GetString(NewGameKey);
 
     }
 }

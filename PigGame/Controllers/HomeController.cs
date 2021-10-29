@@ -12,11 +12,11 @@ namespace PigGame.Controllers
     public class HomeController : Controller
     {
         [HttpGet]
-        public IActionResult Index(PigViewModel vm)
+        public ViewResult Index()// PigViewModel vm)
         {
-            // PigViewModel vm = new PigViewModel();
-            string? NewGameValue = vm.NewGameValue;
+            PigViewModel vm = new PigViewModel();
             var session = new PigSession(HttpContext.Session);
+            string NewGameValue = session.GetNewGame(); // vm.NewGameValue;
             //int? tempCurrentPlayer = session.GetCurrentPlayer();
             //int? tempCurrentRoll = session.GetCurrentRoll();
             //int? tempCurrentTurnScore = session.GetCurrentTurnScore();
@@ -41,6 +41,12 @@ namespace PigGame.Controllers
                     PlayerTwoTotalScore = 0
                 };
                 vm.NewGameValue = "false";
+                session.SetCurrentRoll(vm.Pig.CurrentRollScore);
+                session.SetCurrentPlayer(vm.Pig.CurrentPlayer);
+                session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
+                session.SetNewGame(vm.NewGameValue);
+                session.SetPlayerOneScore(vm.Pig.PlayerOneTotalScore);
+                session.SetPlayerTwoScore(vm.Pig.PlayerTwoTotalScore);
                 return View(vm);
             }
             else if (session.GetCurrentPlayer() == null || session.GetCurrentPlayer().ToString() == "")
@@ -104,8 +110,10 @@ namespace PigGame.Controllers
         }
 
         // [HttpGet]
-        public IActionResult NewGame(PigViewModel vm)
+        [HttpPost]
+        public RedirectToActionResult NewGame(PigViewModel vm)
         {
+            var session = new PigSession(HttpContext.Session);
             // PigViewModel vm = new PigViewModel();
             // Pig pig = new Pig();
             // pig.NewGameValue = "true";
@@ -116,12 +124,13 @@ namespace PigGame.Controllers
             // vm.Pig.CurrentTurnScore = pig.CurrentTurnScore;
             // vm.Pig.PlayerOneTotalScore = pig.PlayerOneTotalScore;
             // vm.Pig.PlayerTwoTotalScore = pig.PlayerTwoTotalScore;
-            return RedirectToAction("Index", vm);
+            session.SetNewGame(vm.NewGameValue);
+            return RedirectToAction("Index"); // , vm);
         }
 
-        // [HttpPost]
-        [HttpGet]
-        public IActionResult Roll(PigViewModel vm)
+        [HttpPost]
+        // [HttpGet]
+        public RedirectToActionResult Roll(PigViewModel vm)
         {
             var session = new PigSession(HttpContext.Session);
             //int? tempCurrentPlayer = session.GetCurrentPlayer();
@@ -160,12 +169,12 @@ namespace PigGame.Controllers
                     if (vm.Pig.PlayerOneTotalScore >= 20)
                     {
                         TempData["message"] = $"Player {vm.Pig.CurrentPlayer} wins!";
-                        return RedirectToAction("NewGame", vm);
+                        return RedirectToAction("NewGame"); // , vm);
                     }
                     // return View("Index", vm);
                     else
                     {
-                        return RedirectToAction("Index", vm);
+                        return RedirectToAction("Index"); // , vm);
                     }
                 }
                 else
@@ -175,11 +184,11 @@ namespace PigGame.Controllers
                     if (vm.Pig.PlayerTwoTotalScore >= 20)
                     {
                         TempData["message"] = $"Player {vm.Pig.CurrentPlayer} wins!";
-                        return RedirectToAction("NewGame", vm);
+                        return RedirectToAction("NewGame"); // , vm);
                     }
                     else
                     {
-                        return RedirectToAction("Index", vm);
+                        return RedirectToAction("Index"); // , vm);
                     }
                 }
                 // return View("Index", vm);
@@ -202,7 +211,7 @@ namespace PigGame.Controllers
                     session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
                     session.SetPlayerOneScore(vm.Pig.PlayerOneTotalScore);
                     session.SetPlayerTwoScore(vm.Pig.PlayerTwoTotalScore);
-                    return RedirectToAction("Hold", vm);
+                    return RedirectToAction("Hold"); // , vm);
                 }
                 else
                 { 
@@ -216,7 +225,7 @@ namespace PigGame.Controllers
                     session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
                     session.SetPlayerOneScore(vm.Pig.PlayerOneTotalScore);
                     session.SetPlayerTwoScore(vm.Pig.PlayerTwoTotalScore);
-                    return RedirectToAction("Hold", vm);
+                    return RedirectToAction("Hold"); // , vm);
                 }
             }
         }
@@ -251,12 +260,14 @@ namespace PigGame.Controllers
                 // vm.Pig.PlayerTwoTotalScore += vm.Pig.CurrentTurnScore;
                 vm.Pig.CurrentPlayer--;
             }
+            vm.Pig.CurrentRollScore = 0;
+            vm.Pig.CurrentTurnScore = 0;
             session.SetCurrentPlayer(vm.Pig.CurrentPlayer);
             session.SetCurrentRoll(vm.Pig.CurrentRollScore);
             session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
             session.SetPlayerOneScore(vm.Pig.PlayerOneTotalScore);
             session.SetPlayerTwoScore(vm.Pig.PlayerTwoTotalScore);
-            return RedirectToAction("Index", vm);
+            return RedirectToAction("Index"); // , vm);
         }
     }
 }
