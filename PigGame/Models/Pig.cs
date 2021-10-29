@@ -14,5 +14,7 @@ namespace PigGame.Models
         public int CurrentTurnScore { get; set; }
 
         public int CurrentPlayer { get; set; }
+
+        public int CurrentRollScore { get; set; }
     }
 }

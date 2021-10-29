@@ -1,4 +1,5 @@
-﻿@{
+﻿@model PigViewModel
+@{
     ViewData["Title"] = "Pig";
 }
 
@@ -9,26 +10,26 @@
                 <tr>
                     <td>
                         <div class="row">
-                            <div class="col">Player 1: score</div>
+                            <div class="col">Player 1: @Model.Pig.PlayerOneTotalScore</div>
                             <div class="col text-right">
                                 <a asp-action="NewGame" class="btn btn-outline-dark">New Game</a>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">Player 2: score</div>
+                            <div class="col">Player 2: @Model.Pig.PlayerTwoTotalScore</div>
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <div class="row">
-                            <div class="font-weight-bold">Player 2's turn</div>
+                            <div class="font-weight-bold">Player @Model.Pig.CurrentPlayer's turn</div>
                         </div>
                         <div class="row">
                             <a asp-action="Roll" class="btn btn-dark mr-2">Roll</a>
                             <a asp-action="Hold" class="btn btn-outline-dark mr-2">Hold</a>
-                            <div class="mr-2">Die: 6</div>
-                            <div>Total: 9</div>
+                            <div class="mr-2">Die: @Model.Pig.CurrentRollScore</div>
+                            <div>Total: @Model.Pig.CurrentTurnScore</div>
                         </div>
                     </td>
                 </tr>
