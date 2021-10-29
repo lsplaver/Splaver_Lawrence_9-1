@@ -109,17 +109,32 @@ namespace PigGame.Controllers
         public IActionResult Roll(PigViewModel vm)
         {
             var session = new PigSession(HttpContext.Session);
-            string tempCurrentPlayer = session.GetCurrentPlayer().ToString();
+            int? tempCurrentPlayer = session.GetCurrentPlayer();
+            int? tempCurrentRoll = session.GetCurrentRoll();
+            int? tempCurrentTurnScore = session.GetCurrentTurnScore();
+            int? tempPlayerOneScore = session.GetPlayerOneScore();
+            int? tempPlayerTwoScore = session.GetPlayerTwoScore();
             // PigViewModel vm = new PigViewModel();
             Random rand = new Random();
             int roll = rand.Next(1, 7);
             if (roll > 1)
             {
-                vm.Pig.CurrentRollScore = roll;
-                vm.Pig.CurrentTurnScore += vm.Pig.CurrentRollScore;
+                vm.Pig = new Pig
+                {
+                    CurrentRollScore = roll,
+                    CurrentTurnScore = (roll + (int)tempCurrentTurnScore),
+                    CurrentPlayer = (int)tempCurrentPlayer,
+                    PlayerOneTotalScore = (int)tempPlayerOneScore,
+                    PlayerTwoTotalScore = (int)tempPlayerTwoScore
+                };
+                session.SetCurrentPlayer(vm.Pig.CurrentPlayer);
+                session.SetCurrentRoll(vm.Pig.CurrentRollScore);
+                session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
+                session.SetPlayerOneScore(vm.Pig.PlayerOneTotalScore);
+                session.SetPlayerTwoScore(vm.Pig.PlayerTwoTotalScore);
                 // if (roll >= 20)
                 // {
-                    return View(vm);
+                    return View("Index", vm);
                 // }    
             }
             else
