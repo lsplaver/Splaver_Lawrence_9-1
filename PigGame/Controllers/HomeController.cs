@@ -13,17 +13,64 @@ namespace PigGame.Controllers
     {
         public static PigViewModel PigDefaults()
         {
-            PigViewModel vm = new PigViewModel();
-            vm.Pig = new Pig
+            PigViewModel vm = new PigViewModel
             {
-                CurrentPlayer = 1,
-                CurrentRollScore = 0,
-                CurrentTurnScore = 0,
-                PlayerOneTotalScore = 0,
-                PlayerTwoTotalScore = 0
+                Pig = new Pig
+                {
+                    CurrentPlayer = 1,
+                    CurrentRollScore = 0,
+                    CurrentTurnScore = 0,
+                    PlayerOneTotalScore = 0,
+                    PlayerTwoTotalScore = 0
+                }
             };
 
             return vm;
+        }
+
+        public PigViewModel GetPigSessionValues()
+        {
+            var session = new PigSession(HttpContext.Session);
+            PigViewModel vm = new PigViewModel
+            {
+                Pig = new Pig
+                {
+                    PlayerOneTotalScore = (int)session.GetPlayerOneScore(),
+                    PlayerTwoTotalScore = (int)session.GetPlayerTwoScore(),
+                    CurrentPlayer = (int)session.GetCurrentPlayer(),
+                    CurrentRollScore = (int)session.GetCurrentRoll(),
+                    CurrentTurnScore = (int)session.GetCurrentTurnScore()
+                }
+            };
+            return vm;
+        }
+        public void SetPigSessions(int roll, int turnscore, int player, int playeronescore, int playertwoscore, string newgame)
+        {
+            var session = new PigSession(HttpContext.Session);
+            session.SetCurrentPlayer(player);
+            session.SetCurrentRoll(roll);
+            session.SetCurrentTurnScore(turnscore);
+            session.SetPlayerOneScore(playeronescore);
+            session.SetPlayerTwoScore(playertwoscore);
+            session.SetNewGame(newgame);
+        }
+
+        public void SetPigSessions(int roll, int turnscore, int player, int playeronescore, int playertwoscore)
+        {
+            var session = new PigSession(HttpContext.Session);
+            session.SetCurrentPlayer(player);
+            session.SetCurrentRoll(roll);
+            session.SetCurrentTurnScore(turnscore);
+            session.SetPlayerOneScore(playeronescore);
+            session.SetPlayerTwoScore(playertwoscore);
+        }
+
+        public void SetPigSessions(int roll, int turnscore, int player)
+        {
+            var session = new PigSession(HttpContext.Session);
+            session.SetCurrentPlayer(player);
+            session.SetCurrentRoll(roll);
+            session.SetCurrentTurnScore(turnscore);
         }
 
         [HttpGet]
@@ -57,12 +104,14 @@ namespace PigGame.Controllers
                 //};
                 PigDefaults();
                 vm.NewGameValue = "false";
-                session.SetCurrentRoll(PigDefaults().Pig.CurrentRollScore);
-                session.SetCurrentPlayer(PigDefaults().Pig.CurrentPlayer);
-                session.SetCurrentTurnScore(PigDefaults().Pig.CurrentTurnScore);
-                session.SetNewGame(vm.NewGameValue);
-                session.SetPlayerOneScore(PigDefaults().Pig.PlayerOneTotalScore);
-                session.SetPlayerTwoScore(PigDefaults().Pig.PlayerTwoTotalScore);
+                //session.SetCurrentRoll(PigDefaults().Pig.CurrentRollScore);
+                //session.SetCurrentPlayer(PigDefaults().Pig.CurrentPlayer);
+                //session.SetCurrentTurnScore(PigDefaults().Pig.CurrentTurnScore);
+                // session.SetNewGame(vm.NewGameValue);
+                //session.SetPlayerOneScore(PigDefaults().Pig.PlayerOneTotalScore);
+                //session.SetPlayerTwoScore(PigDefaults().Pig.PlayerTwoTotalScore);
+                SetPigSessions(PigDefaults().Pig.CurrentRollScore, PigDefaults().Pig.CurrentTurnScore, PigDefaults().Pig.CurrentPlayer,
+                    PigDefaults().Pig.PlayerOneTotalScore, PigDefaults().Pig.PlayerTwoTotalScore, vm.NewGameValue);
                 return View(PigDefaults());
             }
             else if (session.GetCurrentPlayer() == null || session.GetCurrentPlayer().ToString() == "")
@@ -97,11 +146,13 @@ namespace PigGame.Controllers
                 //    PlayerTwoTotalScore = 0
                 //};
                 PigDefaults();
-                session.SetCurrentPlayer(PigDefaults().Pig.CurrentPlayer);// vm.Pig.CurrentPlayer);
-                session.SetCurrentRoll(PigDefaults().Pig.CurrentRollScore);// vm.Pig.CurrentRollScore);
-                session.SetCurrentTurnScore(PigDefaults().Pig.CurrentTurnScore);// vm.Pig.CurrentTurnScore);
-                session.SetPlayerOneScore(PigDefaults().Pig.PlayerOneTotalScore);// vm.Pig.PlayerOneTotalScore);
-                session.SetPlayerTwoScore(PigDefaults().Pig.PlayerTwoTotalScore);// vm.Pig.PlayerTwoTotalScore);
+                //session.SetCurrentPlayer(PigDefaults().Pig.CurrentPlayer);// vm.Pig.CurrentPlayer);
+                //session.SetCurrentRoll(PigDefaults().Pig.CurrentRollScore);// vm.Pig.CurrentRollScore);
+                //session.SetCurrentTurnScore(PigDefaults().Pig.CurrentTurnScore);// vm.Pig.CurrentTurnScore);
+                //session.SetPlayerOneScore(PigDefaults().Pig.PlayerOneTotalScore);// vm.Pig.PlayerOneTotalScore);
+                //session.SetPlayerTwoScore(PigDefaults().Pig.PlayerTwoTotalScore);// vm.Pig.PlayerTwoTotalScore);
+                SetPigSessions(PigDefaults().Pig.CurrentRollScore, PigDefaults().Pig.CurrentTurnScore, PigDefaults().Pig.CurrentPlayer,
+                    PigDefaults().Pig.PlayerOneTotalScore, PigDefaults().Pig.PlayerTwoTotalScore);
                 TempData.Clear();
                 return View(PigDefaults());
             }
@@ -123,33 +174,38 @@ namespace PigGame.Controllers
                 //    PlayerTwoTotalScore = 0
                 //};
                 vm.NewGameValue = "false";
-                session.SetCurrentRoll(PigDefaults().Pig.CurrentRollScore);
-                session.SetCurrentPlayer(PigDefaults().Pig.CurrentPlayer);
-                session.SetCurrentTurnScore(PigDefaults().Pig.CurrentTurnScore);
-                session.SetNewGame(vm.NewGameValue);
-                session.SetPlayerOneScore(PigDefaults().Pig.PlayerOneTotalScore);
-                session.SetPlayerTwoScore(PigDefaults().Pig.PlayerTwoTotalScore);
+                //session.SetCurrentRoll(PigDefaults().Pig.CurrentRollScore);
+                //session.SetCurrentPlayer(PigDefaults().Pig.CurrentPlayer);
+                //session.SetCurrentTurnScore(PigDefaults().Pig.CurrentTurnScore);
+                //session.SetNewGame(vm.NewGameValue);
+                //session.SetPlayerOneScore(PigDefaults().Pig.PlayerOneTotalScore);
+                //session.SetPlayerTwoScore(PigDefaults().Pig.PlayerTwoTotalScore);
+                SetPigSessions(PigDefaults().Pig.CurrentRollScore, PigDefaults().Pig.CurrentTurnScore, PigDefaults().Pig.CurrentPlayer,
+                    PigDefaults().Pig.PlayerOneTotalScore, PigDefaults().Pig.PlayerTwoTotalScore, vm.NewGameValue);
                 return View(PigDefaults());
             }
             else
             {
                 // keep values unchanged
                 // var tempPigCurrentPlayer = ;
-                vm.Pig = new Pig
-                {
-                    CurrentPlayer = (int)session.GetCurrentPlayer(),
-                    CurrentRollScore = (int)session.GetCurrentRoll(),
-                    CurrentTurnScore = (int)session.GetCurrentTurnScore(),
-                    PlayerOneTotalScore = (int)session.GetPlayerOneScore(),
-                    PlayerTwoTotalScore = (int)session.GetPlayerTwoScore()
-                };
-                session.SetCurrentPlayer(vm.Pig.CurrentPlayer);
-                session.SetCurrentRoll(vm.Pig.CurrentRollScore);
-                session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
-                session.SetPlayerOneScore(vm.Pig.PlayerOneTotalScore);
-                session.SetPlayerTwoScore(vm.Pig.PlayerTwoTotalScore);
+                //vm.Pig = new Pig
+                //{
+                //    CurrentPlayer = (int)session.GetCurrentPlayer(),
+                //    CurrentRollScore = (int)session.GetCurrentRoll(),
+                //    CurrentTurnScore = (int)session.GetCurrentTurnScore(),
+                //    PlayerOneTotalScore = (int)session.GetPlayerOneScore(),
+                //    PlayerTwoTotalScore = (int)session.GetPlayerTwoScore()
+                //};
+                GetPigSessionValues();
+                //session.SetCurrentPlayer(vm.Pig.CurrentPlayer);
+                //session.SetCurrentRoll(vm.Pig.CurrentRollScore);
+                //session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
+                //session.SetPlayerOneScore(vm.Pig.PlayerOneTotalScore);
+                //session.SetPlayerTwoScore(vm.Pig.PlayerTwoTotalScore);
+                SetPigSessions(GetPigSessionValues().Pig.CurrentRollScore, GetPigSessionValues().Pig.CurrentTurnScore, GetPigSessionValues().Pig.CurrentPlayer,
+                    GetPigSessionValues().Pig.PlayerOneTotalScore, GetPigSessionValues().Pig.PlayerTwoTotalScore); // vm.Pig.CurrentRollScore, vm.Pig.CurrentTurnScore, vm.Pig.CurrentPlayer, vm.Pig.PlayerOneTotalScore, vm.Pig.PlayerTwoTotalScore);
 
-                return View(vm);
+                return View(GetPigSessionValues()); // vm);
             }
         }
 
@@ -206,9 +262,10 @@ namespace PigGame.Controllers
                 vm.Pig.CurrentPlayer = (int)session.GetCurrentPlayer();
                 //vm.Pig.PlayerOneTotalScore = (int)session.GetPlayerOneScore();
                 //vm.Pig.PlayerTwoTotalScore = (int)session.GetPlayerTwoScore();
-                session.SetCurrentPlayer(vm.Pig.CurrentPlayer);
-                session.SetCurrentRoll(vm.Pig.CurrentRollScore);
-                session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
+                //session.SetCurrentPlayer(vm.Pig.CurrentPlayer);
+                //session.SetCurrentRoll(vm.Pig.CurrentRollScore);
+                //session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
+                SetPigSessions(vm.Pig.CurrentRollScore, vm.Pig.CurrentTurnScore, vm.Pig.CurrentPlayer);
                 //session.SetPlayerOneScore(vm.Pig.PlayerOneTotalScore);
                 //session.SetPlayerTwoScore(vm.Pig.PlayerTwoTotalScore);
                 //if (vm.Pig.CurrentPlayer == 1)
@@ -255,9 +312,10 @@ namespace PigGame.Controllers
                     // vm.Pig.CurrentPlayer++;
                     // return View(vm);
                     // vm.Pig.PlayerOneTotalScore = (int)tempPlayerOneScore;
-                    session.SetCurrentPlayer(vm.Pig.CurrentPlayer);
-                    session.SetCurrentRoll(vm.Pig.CurrentRollScore);
-                    session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
+                    //session.SetCurrentPlayer(vm.Pig.CurrentPlayer);
+                    //session.SetCurrentRoll(vm.Pig.CurrentRollScore);
+                    //session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
+                    SetPigSessions(vm.Pig.CurrentRollScore, vm.Pig.CurrentTurnScore, vm.Pig.CurrentPlayer);
                     session.SetPlayerOneScore(vm.Pig.PlayerOneTotalScore);
                     //session.SetPlayerTwoScore(vm.Pig.PlayerTwoTotalScore);
                     return RedirectToAction("Hold"); // , vm);
@@ -269,9 +327,10 @@ namespace PigGame.Controllers
                     //vm.Pig.CurrentPlayer--;
                     // return View(vm);
                     //vm.Pig.PlayerTwoTotalScore = (int)tempPlayerTwoScore;
-                    session.SetCurrentPlayer(vm.Pig.CurrentPlayer);
-                    session.SetCurrentRoll(vm.Pig.CurrentRollScore);
-                    session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
+                    //session.SetCurrentPlayer(vm.Pig.CurrentPlayer);
+                    //session.SetCurrentRoll(vm.Pig.CurrentRollScore);
+                    //session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
+                    SetPigSessions(vm.Pig.CurrentRollScore, vm.Pig.CurrentTurnScore, vm.Pig.CurrentPlayer);
                     //session.SetPlayerOneScore(vm.Pig.PlayerOneTotalScore);
                     session.SetPlayerTwoScore(vm.Pig.PlayerTwoTotalScore);
                     return RedirectToAction("Hold"); // , vm);
@@ -325,9 +384,10 @@ namespace PigGame.Controllers
             }
             vm.Pig.CurrentRollScore = 0;
             vm.Pig.CurrentTurnScore = 0;
-            session.SetCurrentPlayer(vm.Pig.CurrentPlayer);
-            session.SetCurrentRoll(vm.Pig.CurrentRollScore);
-            session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
+            //session.SetCurrentPlayer(vm.Pig.CurrentPlayer);
+            //session.SetCurrentRoll(vm.Pig.CurrentRollScore);
+            //session.SetCurrentTurnScore(vm.Pig.CurrentTurnScore);
+            SetPigSessions(vm.Pig.CurrentRollScore, vm.Pig.CurrentTurnScore, vm.Pig.CurrentPlayer);
             //session.SetPlayerOneScore(vm.Pig.PlayerOneTotalScore);
             //session.SetPlayerTwoScore(vm.Pig.PlayerTwoTotalScore);
             return RedirectToAction("Index"); // , vm);
