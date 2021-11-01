@@ -7,7 +7,7 @@ namespace PigGame.Models
 {
     public class PigViewModel
     {
-        public Pig? Pig { get; set; }
+        public Pig Pig { get; set; }
 
         public string NewGameValue { get; set; }
     }

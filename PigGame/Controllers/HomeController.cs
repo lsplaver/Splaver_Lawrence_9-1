@@ -78,8 +78,8 @@ namespace PigGame.Controllers
         {
             PigViewModel vm = new PigViewModel();
             var session = new PigSession(HttpContext.Session);
-            string? NewGameValue = session.GetNewGame();
-            if ((session.GetCurrentPlayer() == null || session.GetCurrentPlayer().ToString() == "") && NewGameValue == "true")
+            string NewGameValue = session.GetNewGame();
+            if (session.GetCurrentPlayer() == null && NewGameValue == "true")
             {
                 PigDefaults();
                 vm.NewGameValue = "false";
@@ -87,7 +87,7 @@ namespace PigGame.Controllers
                     PigDefaults().Pig.PlayerOneTotalScore, PigDefaults().Pig.PlayerTwoTotalScore, vm.NewGameValue);
                 return View(PigDefaults());
             }
-            else if (session.GetCurrentPlayer() == null || session.GetCurrentPlayer().ToString() == "")
+            else if (session.GetCurrentPlayer() == null)
             {
                 PigDefaults();
                 SetPigSessions(PigDefaults().Pig.CurrentRollScore, PigDefaults().Pig.CurrentTurnScore, PigDefaults().Pig.CurrentPlayer,
@@ -95,7 +95,7 @@ namespace PigGame.Controllers
                 TempData.Clear();
                 return View(PigDefaults());
             }
-            else if ((session.GetCurrentPlayer() != null || session.GetCurrentPlayer().ToString() != "") && NewGameValue == "true")
+            else if (session.GetCurrentPlayer() != null && NewGameValue == "true")
             {
                 vm.NewGameValue = "false";
                 SetPigSessions(PigDefaults().Pig.CurrentRollScore, PigDefaults().Pig.CurrentTurnScore, PigDefaults().Pig.CurrentPlayer,
@@ -125,12 +125,7 @@ namespace PigGame.Controllers
             var session = new PigSession(HttpContext.Session);
             Random rand = new Random();
             int roll = rand.Next(1, 7);
-            vm.Pig = new Pig();
-            vm.Pig.CurrentPlayer = (int)session.GetCurrentPlayer();
-            vm.Pig.CurrentRollScore = (int)session.GetCurrentRoll();
-            vm.Pig.CurrentTurnScore = (int)session.GetCurrentTurnScore();
-            vm.Pig.PlayerOneTotalScore = (int)session.GetPlayerOneScore();
-            vm.Pig.PlayerTwoTotalScore = (int)session.GetPlayerTwoScore();
+            vm = GetPigSessionValues();
             if (roll > 1)
             {
                 vm.Pig.CurrentRollScore = roll;
@@ -162,13 +157,8 @@ namespace PigGame.Controllers
 
         public RedirectToActionResult Hold(PigViewModel vm)
         {
-            vm.Pig = new Pig();
             var session = new PigSession(HttpContext.Session);
-            vm.Pig.PlayerOneTotalScore = (int)session.GetPlayerOneScore();
-            vm.Pig.PlayerTwoTotalScore = (int)session.GetPlayerTwoScore();
-            vm.Pig.CurrentPlayer = (int)session.GetCurrentPlayer();
-            vm.Pig.CurrentRollScore = (int)session.GetCurrentRoll();
-            vm.Pig.CurrentTurnScore = (int)session.GetCurrentTurnScore();
+            vm = GetPigSessionValues();
             if (vm.Pig.CurrentPlayer == 1)
             {
                 vm.Pig.PlayerOneTotalScore += vm.Pig.CurrentTurnScore;
